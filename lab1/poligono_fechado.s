@@ -1,7 +1,8 @@
 .eqv A 0x0A
+.eqv N 3
 
 .data
-V:	.word 3, 0x00150010, 0x010000C0, 0x001500C0
+V:	.word N, 0x00150010, 0x010000C0, 0x001500C0
 
 .text
 	la tp,exceptionHandling	# carrega em tp o endereço base das rotinas do sistema ECALL
@@ -10,6 +11,146 @@ V:	.word 3, 0x00150010, 0x010000C0, 0x001500C0
 
  	jal DESENHA_POLIGONO
  	j FIM
+
+ORDENA:	la t0, V		# endereço do vetor de coordenadas
+	li t2, 1		# indice
+EXTREMOS:
+	slli t4, t2, 2
+	add t4, t0, t4
+	lw t3, 0(t4)		# le par de coordenadas
+	srli s4, t3, 16		# inicia a primeira coordenada como a mais esquerda
+	addi s5, s4, 0		# inicia a primeira coordenada como a mais direita
+	addi t2, t2, 1
+EXTREMOS_LOOP:
+	bge t2, N, SORT
+	slli t4, t2, 2
+	add t4, t0, t4
+	lw t3, 0(t4)		# le par de coordenadas
+	srli t6, t3, 16		# le a coordenada x
+	blt t6, s4, EXTREMO_ESQUERDA
+	ble t6, s5, EXTREMOS_LOOP
+	mv s5, t6
+EXTREMO_ESQUERDA:
+	mv s4, t6
+	j EXTREMOS_LOOP
+SWAP:	slli t1, a1, 2
+	add t1, a0, t1
+	lw t0, 0(t1)
+	lw t2, 4(t1)
+	sw t2,0(t1)
+	sw t0,4(t1)
+	ret
+SORT:	addi sp, sp, -20	# reserva espaço para 5 palavras na pilha
+	sw ra, 16(sp)
+	sw s3, 12(sp)
+	sw s2, 8(sp)
+	sw s1, 4(sp)
+	sw s0, 0(sp)
+	mv s2, t0		# endereço vetor
+	li s3, N		# qtd elementos
+	li s0, 1		# indice
+FOR1:	bge s0, s3, FIM_SORT1
+	addi s1, s0, -1
+FOR2:	blt s1, 1, FIM_SORT2
+	slli t1, s1, 2
+	add t2, s2, t1		# indexação
+	lw t3, 0(t2)		# V[i]
+	srli t3, t3, 16		# le a coordenada x[i]
+	lw t4, 4(t2)		# V[i+1]
+	srli t4, t4, 16		# le a coordenada x[i+1]
+	bge t4, t3, FIM_SORT2
+	mv a0, s2
+	mv a1, s1
+	jal SWAP
+	addi s1, s1, -1
+	j FOR2
+FIM_SORT2:
+	addi s0, s0, 1
+	j FOR1
+FIN_SORT1:
+	lw s0, 0(sp)
+	lw s1, 4(sp)
+	lw s2, 8(sp)
+	lw s3, 12(sp)
+	lw ra, 16(sp)
+	addi sp, sp, 20		# desempilha items
+	ret
+SEPARA_AREAS:			# separa vetor de coordenadas: primeiro pontos acima da linha
+	addi sp, sp, -24
+	sw ra, 0(sp)
+	sw s0, 4(sp)
+	sw s1, 8(sp)
+	sw t0, 12(sp)
+	sw s2, 16(sp)
+	sw t1, 20(sp)
+	la s0, V		# endereco de V
+	lw s1, 0(s0)		# numero de itens
+	addi s0, s0, 4
+	li t0, 0		# indice
+SA_L1:	bge t0, s1, SA_L2
+	add s2, s0, zero
+	lw t1, 0(s0)
+	beq t1, s4, SA_PP	# se o ponto for o extremo à esquerda
+	beq t1, s5, SA_PP	# se o ponto for o extremo à direita
+	mv a0, s4
+	mv a1, s5
+	mv a2, t1
+	jal ACIMA_DA_LINHA	# retorna 1 se estiver acima da linha
+	bnez a0, SA_PP
+	addi sp, sp, -4
+	sw t0, 0(sp)
+SA_L1_LOOP:
+	addi t0, t0, 1
+	bge t0, s1, SA_F_L1_LOOP
+	addi s2, s2, 4
+	lw a2, 0(s2)
+	mv a0, s4
+	mv a1, s5
+	jal ACIMA_DA_LINHA
+	# se estiver acima da linha, fazer troca
+SA_F_L1_LOOP:
+	lw t0, 0(sp)
+	addi sp, sp, 4
+SA_PP:	addi s0, s0, 4
+	addi t0, t0, 1
+	j SA_L1
+SA_L2:	lw ra, 0(sp)
+	lw s0, 4(sp)
+	lw s1, 8(sp)
+	lw t0, 12(sp)
+	lw s2, 16(sp)
+	lw t1, 20(sp)
+	addi sp, sp, 24
+	ret
+ACIMA_DA_LINHA:			# verifica se ponto C está acima da linha AB
+	addi sp, sp, -24
+	sw t0, 20(sp)
+	sw t1, 16(sp)
+	sw t2, 12(sp)
+	sw t3, 8(sp)
+	sw t4, 4(sp)
+	sw t5, 0(sp)
+	srli t0, a0, 16		# coordenada x do ponto A
+	andi t1, a0, 0xFFFF	# coordenada y do ponto A
+	srli t2, a1, 16		# coordenada x do ponto B
+	andi t3, a1, 0xFFFF	# coordenada y do ponto B
+	srli t4, a2, 16		# coordenada x do ponto C
+	andi t5, a2, 0xFFFF	# coordenada y do ponto C
+	sub t2, t2, t0		# bx - ax
+	sub t5, t5, t1		# cy - ay
+	mul t2, t2, t5		# (bx - ax)*(cy - ay)
+	sub t3, t3, t1		# by - ay
+	sub t4, t4, t0		# cx - ax
+	mul t3, t3, t4		# (by- ay)*(cx - ax)
+	sgt a0, t2, t3
+	lw t5, 0(sp)
+	lw t4, 4(sp)
+	lw t3, 8(sp)
+	lw t2, 12(sp)
+	lw t1, 16(sp)
+	lw t0, 20(sp)
+	addi sp, sp, 24		# desempilha
+	ret
  	 	
 DESENHA_POLIGONO:
 	la t0, V		# endereço do vetor de coordenadas
@@ -39,7 +180,7 @@ FECHA:	mv a0, a2		# coordenada origem x
 	ecall
 	ret			# sai do procedimento DESENHA_POLIGONO
 	
-FIM:	li a7,10
+FIM:	li a7, 10
 	ecall
 
 .include "../SYSTEMv17b.s"
