@@ -1,16 +1,17 @@
-.eqv A 0x0A
-.eqv N 5
+.eqv A 0x00000007
+.eqv N 12
 
 .data
-V:	.word N, 0x00150010, 0x010000C0, 0x00C700B3, 0x001500C0, 0x010A0011
+V:	.word N, 0x00E6001C, 0x00A40052, 0x00A00042, 0x007B006D, 0x00760061, 0x004C007F, 0x003200D3, 0x005C00CB, 0x0080008C, 0x008600A4, 0x00A80068, 0x00AD007D
 
 .text
 	la tp,exceptionHandling	# carrega em tp o endereço base das rotinas do sistema ECALL
  	csrw tp,utvec 		# seta utvec para o endereço tp
  	csrsi ustatus,1 	# seta o bit de habilitação de interrupção em ustatus (reg 0)
 	
+	#jal DESENHA_POLIGONO	# poligono não ordenado
 	jal ORDENA
- 	jal DESENHA_POLIGONO
+ 	jal DESENHA_POLIGONO	# poligono ordenado
  	j FIM
 
 ORDENA:	la t0, V		# endereço do vetor de coordenadas
@@ -20,7 +21,7 @@ EXTREMOS:
 	slli t4, t2, 2
 	add t4, t0, t4
 	lw t3, 0(t4)		# le par de coordenadas
-	srli s4, t3, 16		# inicia a primeira coordenada como a mais esquerda
+	mv s4, t3		# inicia a primeira coordenada como a mais esquerda
 	addi s5, s4, 0		# inicia a primeira coordenada como a mais direita
 	addi t2, t2, 1
 EXTREMOS_LOOP:
@@ -30,12 +31,14 @@ EXTREMOS_LOOP:
 	add t4, t0, t4
 	lw t3, 0(t4)		# le par de coordenadas
 	srli t6, t3, 16		# le a coordenada x
-	blt t6, s4, EXTREMO_ESQUERDA
-	ble t6, s5, EXTREMOS_LOOP
-	mv s5, t6
+	srli t1, s4, 16
+	srli t5, s5, 16
+	blt t6, t1, EXTREMO_ESQUERDA
+	ble t6, t5, EXTREMOS_LOOP
+	mv s5, t3
 	j EXTREMOS_LOOP
 EXTREMO_ESQUERDA:
-	mv s4, t6
+	mv s4, t3
 	j EXTREMOS_LOOP
 SWAP:	slli t1, a1, 2
 	add t1, a0, t1
