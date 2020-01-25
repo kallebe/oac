@@ -1,20 +1,53 @@
 .eqv A 0x00000007
-.eqv N 12
+#.eqv N 12
 
 .data
-V:	.word N, 0x00E6001C, 0x00A40052, 0x00A00042, 0x007B006D, 0x00760061, 0x004C007F, 0x003200D3, 0x005C00CB, 0x0080008C, 0x008600A4, 0x00A80068, 0x00AD007D
+#V:	.word N, 0x00E6001C, 0x00A40052, 0x00A00042, 0x007B006D, 0x00760061, 0x004C007F, 0x003200D3, 0x005C00CB, 0x0080008C, 0x008600A4, 0x00A80068, 0x00AD007D
 
 .text
 	la tp,exceptionHandling	# carrega em tp o endereço base das rotinas do sistema ECALL
  	csrw tp,utvec 		# seta utvec para o endereço tp
  	csrsi ustatus,1 	# seta o bit de habilitação de interrupção em ustatus (reg 0)
 	
-	#jal DESENHA_POLIGONO	# poligono não ordenado
+	li s0, 5 #simula o numero de items na lista
+	li t1, 0 #s1 serve como o contador e é iniciado em 0
+	slli t0, s0, 2 #multiplica o numero de items por 4
+	sub sp ,sp, t0 #aloca memoria para pilha
+	sw s1, (sp) #salva o endereco de s1 na pilha
+	addi s1, sp, 4 #avança para o proximo endereço de s1
+	mv s11, sp
+	jal SORTEIA
+	li s0, 5
+	sw s0, 0(s11)
+	jal DESENHA_POLIGONO	# poligono não ordenado
 	jal ORDENA
  	jal DESENHA_POLIGONO	# poligono ordenado
  	j FIM
+ 
 
-ORDENA:	la t0, V		# endereço do vetor de coordenadas
+SORTEIA:
+	bge t1, s0, EXIT_SORTEIA
+	#Mapear coordenadas X
+	li a7, 41 #Gera um valor aleatorio que será usado para  a coordenada X e armazena em a0
+	ecall
+	li t2, 320 #Valor maximo para coordenadas X
+	remu t2, a0, t2 #recupera o resto da divisão para certificar que o valor aleatorio gerado está no intervalo valido para as coordenadas X
+	slli t2, t2, 16 # Desloca a palavra 16 bits a esquerda
+	#Mapear coordenadas Y
+	li a7, 41 #Gera um valor aleatorio que será usado para  a coordenada Y e armazena em a0
+	ecall
+	li t3, 240 #Valor maximo para coordenadas Y
+	remu t3, a0, t3 #recupera o resto da divisão para certificar que o valor aleatorio gerado está no intervalo valido para as coordenadas Y
+	slli t3, t3, 16 # Desloca a palavra 16 bits a esquerda
+	srli t3, t3, 16 # Desloca a palavra 16 bits a direita para zerar os valores a esquerda no momento de fazer o OR
+	or t4, t2 t3 # junta as coordenadas na palavra
+	sw t4, (s1) # salva a coordenada em sp
+	addi s1, s1, 4 #move sp para a proxima posicao na memoria
+	addi t1, t1, 1 #incrementa o contador
+	j SORTEIA
+EXIT_SORTEIA: ret
+
+ORDENA:	mv t0, s11		# endereço do vetor de coordenadas
 	li t2, 1		# indice
 	lw s8, 0(t0)
 EXTREMOS:
@@ -54,8 +87,6 @@ SORT:	addi sp, sp, -24	# reserva espaço para 5 palavras na pilha
 	sw s2, 8(sp)
 	sw s1, 4(sp)
 	sw s0, 0(sp)
-	#mv s2, t0		# endereço vetor
-	#li s3, N		# qtd elementos
 	li s0, 1		# indice
 FOR1:	bge s0, s3, FIM_SORT1
 	addi s1, s0, -1
@@ -99,7 +130,7 @@ SEPARA_AREAS:			# separa vetor de coordenadas: primeiro pontos acima da linha
 	sw t0, 12(sp)
 	sw s2, 16(sp)
 	sw t1, 20(sp)
-	la s0, V		# endereco de V
+	mv s0, s11		# endereco de V
 	lw s1, 0(s0)		# numero de itens
 	addi s0, s0, 4
 	li t0, 0		# indice
@@ -146,7 +177,7 @@ LIMIAR:	addi sp, sp, -16
 	sw s2, 8(sp)
 	sw s3, 4(sp)
 	sw s9, 0(sp)
-	la s2, V
+	mv s2, s11
 	lw s9, 0(s2)		# N de elementos
 	addi s2, s2, 4		# 1o endereco
 	li t6, 1
@@ -206,7 +237,7 @@ ACIMA_DA_LINHA:			# verifica se ponto C está acima da linha AB
 	ret
  	 	
 DESENHA_POLIGONO:
-	la t0, V		# endereço do vetor de coordenadas
+	mv t0, s11		# endereço do vetor de coordenadas
 	lw t1, 0(t0)		# quantidade de arestas
 	li t2, 1		# indice vetor
 DESENHA_LINHA:
