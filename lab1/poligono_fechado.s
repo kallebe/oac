@@ -54,13 +54,12 @@ SORT:	addi sp, sp, -24	# reserva espaço para 5 palavras na pilha
 	sw s2, 8(sp)
 	sw s1, 4(sp)
 	sw s0, 0(sp)
-	li s8, 1		# 1
-	mv s2, t0		# endereço vetor
-	li s3, N		# qtd elementos
+	#mv s2, t0		# endereço vetor
+	#li s3, N		# qtd elementos
 	li s0, 1		# indice
 FOR1:	bge s0, s3, FIM_SORT1
 	addi s1, s0, -1
-FOR2:	blt s1, s8, FIM_SORT2
+FOR2:	blt s1, zero, FIM_SORT2
 	slli t1, s1, 2
 	add t2, s2, t1		# indexação
 	lw t3, 0(t2)		# V[i]
@@ -73,8 +72,9 @@ FOR2:	blt s1, s8, FIM_SORT2
 	jal ACIMA_DA_LINHA
 	beqz a0, S_DEC
 	bge t4, t3, FIM_SORT2
+	j TR
 S_DEC:	blt t4, t3, FIM_SORT2
-	mv a0, s2
+TR:	mv a0, s2
 	mv a1, s1
 	jal SWAP
 	addi s1, s1, -1
@@ -125,8 +125,8 @@ SA_L1_LOOP:
 	jal ACIMA_DA_LINHA
 	beqz a0, SA_L1_LOOP
 	mv t6, t1		# Troca
-	lw a2, 0(s0)
-	lw t6, 0(s2)
+	sw a2, 0(s0)
+	sw t6, 0(s2)
 SA_F_L1_LOOP:
 	lw t0, 0(sp)
 	addi sp, sp, 4
@@ -140,7 +140,38 @@ SA_L2:	lw ra, 0(sp)
 	lw s2, 16(sp)
 	lw t1, 20(sp)
 	addi sp, sp, 24
-	j SORT
+	j LIMIAR
+LIMIAR:	addi sp, sp, -16
+	sw ra, 12(sp)
+	sw s2, 8(sp)
+	sw s3, 4(sp)
+	sw s9, 0(sp)
+	la s2, V
+	lw s9, 0(s2)		# N de elementos
+	addi s2, s2, 4		# 1o endereco
+	li t6, 1
+LM_L1:	bge t6, a1, LM_F
+	slli t5, t6, 2
+	addi t6, t6, 1		# i++
+	add t5, t5, s2
+	mv a0, s4
+	mv a1, s5
+	lw a2, 0(t5)
+	jal ACIMA_DA_LINHA
+	bnez a0, LM_L1
+	addi s3, t6, -1		# indice primeiro elemento abaixo da linha
+LM_F:	jal SORT
+	slli s3, s3, 2
+	add s2, s2, s3
+	mv s3, s9
+	jal SORT
+	lw ra, 12(sp)
+	lw s2, 8(sp)
+	lw s3, 4(sp)
+	lw s9, 0(sp)
+	addi sp, sp, 16
+	ret
+	
 ACIMA_DA_LINHA:			# verifica se ponto C está acima da linha AB
 	addi sp, sp, -24
 	sw t0, 20(sp)
