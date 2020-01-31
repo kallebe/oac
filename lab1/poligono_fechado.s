@@ -107,7 +107,7 @@ SORT_A:	addi sp, sp, -24	# reserva espaço para 6 palavras na pilha
 	sw s1, 4(sp)
 	sw s0, 0(sp)
 	li s0, 0		# indice
-FOR1A:	bge s0, s3, FIM_SORT1A
+FOR1A:	bgt s0, s3, FIM_SORT1A#e
 	addi s1, s0, -1
 FOR2A:	blt s1, zero, FIM_SORT2A
 	slli t1, s1, 2
@@ -116,20 +116,8 @@ FOR2A:	blt s1, zero, FIM_SORT2A
 	srli t3, t3, 16		# le a coordenada x[i]
 	lw t4, 4(t2)		# V[i+1]
 	srli t4, t4, 16		# le a coordenada x[i+1]
-	#mv a0, s4
-	#mv a1, s5
-	#lw a2, 4(t2)
-	#jal ACIMA_DA_LINHA
-	#beq a2, s4, S_ASC
-	#beqz a0, S_DEC
 S_ASC:	bge t4, t3, FIM_SORT2A
 	j TRA
-S_DEC:	#mv a0, s4
-	#mv a1, s5
-	#lw a2, 0(t2)
-	#jal ACIMA_DA_LINHA
-	#bnez a0, INCS
-	blt t4, t3, FIM_SORT2D
 TRA:	mv a0, s2
 	mv a1, s1
 	jal SWAP
@@ -156,7 +144,7 @@ SORT_D:	addi sp, sp, -24	# reserva espaço para 5 palavras na pilha
 	sw s1, 4(sp)
 	sw s0, 0(sp)
 	li s0, 0		# indice
-FOR1D:	bge s0, s3, FIM_SORT1D
+FOR1D:	bgt s0, s3, FIM_SORT1D#e
 	addi s1, s0, -1
 FOR2D:	blt s1, zero, FIM_SORT2D
 	slli t1, s1, 2
@@ -195,7 +183,7 @@ SEPARA_AREAS:			# separa vetor de coordenadas: primeiro pontos acima da linha
 	mv s0, s11		# endereco de V
 	lw s1, 0(s0)		# numero de itens
 	addi s0, s0, 4
-	li t0, 0		# indice
+	li t0, 1#0		# indice
 SA_L1:	bge t0, s1, SA_L2
 	add s2, s0, zero
 	lw t1, 0(s0)
@@ -210,7 +198,7 @@ SA_L1:	bge t0, s1, SA_L2
 	sw t0, 0(sp)
 SA_L1_LOOP:
 	addi t0, t0, 1
-	bgt t0, s1, SA_F_L1_LOOP
+	bge t0, s1, SA_F_L1_LOOP#t
 	addi s2, s2, 4
 	lw a2, 0(s2)
 	mv a0, s4
@@ -242,7 +230,7 @@ LIMIAR:	addi sp, sp, -16
 	mv s2, s11
 	lw s9, 0(s2)		# N de elementos
 	addi s2, s2, 4		# 1o endereco
-	li t6, 0#1
+	li t6, 1#0
 LM_L1:	bgt t6, s9, LM_F#e
 	slli t5, t6, 2
 	addi t6, t6, 1		# i++
@@ -252,13 +240,12 @@ LM_L1:	bgt t6, s9, LM_F#e
 	lw a2, 0(t5)
 	jal ACIMA_DA_LINHA
 	bnez a0, LM_L1
-	addi s3, t6, 0#-1		# indice ultimo elemento acima da linha
+	addi s3, t6, -2		# indice ultimo elemento acima da linha
 LM_F:	jal SORT_A
 	addi s3, s3, 1#
 	slli s3, s3, 2
 	add s2, s2, s3
-	#addi s3, s9, 0#-1#
-	#addi t6, t6, -1
+	addi t6, t6, -2
 	sub s3, s9, t6
 	jal SORT_D
 	lw ra, 12(sp)
