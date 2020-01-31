@@ -199,8 +199,8 @@ SEPARA_AREAS:			# separa vetor de coordenadas: primeiro pontos acima da linha
 SA_L1:	bge t0, s1, SA_L2
 	add s2, s0, zero
 	lw t1, 0(s0)
-	beq t1, s4, SA_PP	# se o ponto for o extremo à esquerda
-	beq t1, s5, SA_PP	# se o ponto for o extremo à direita
+	#beq t1, s4, SA_PP	# se o ponto for o extremo à esquerda
+	#beq t1, s5, SA_PP	# se o ponto for o extremo à direita
 	mv a0, s4
 	mv a1, s5
 	mv a2, t1
@@ -254,11 +254,11 @@ LM_L1:	bgt t6, s9, LM_F#e
 	bnez a0, LM_L1
 	addi s3, t6, 0#-1		# indice ultimo elemento acima da linha
 LM_F:	jal SORT_A
-	#addi s3, s3, 1#
+	addi s3, s3, 1#
 	slli s3, s3, 2
 	add s2, s2, s3
 	#addi s3, s9, 0#-1#
-	addi t6, t6, -1
+	#addi t6, t6, -1
 	sub s3, s9, t6
 	jal SORT_D
 	lw ra, 12(sp)
