@@ -106,8 +106,8 @@ SORT_A:	addi sp, sp, -24	# reserva espaço para 6 palavras na pilha
 	sw s2, 8(sp)
 	sw s1, 4(sp)
 	sw s0, 0(sp)
-	li s0, 0		# indice
-FOR1A:	bgt s0, s3, FIM_SORT1A#e
+	li s0, 1#0		# indice
+FOR1A:	bgt s0, s3, FIM_SORT1A
 	addi s1, s0, -1
 FOR2A:	blt s1, zero, FIM_SORT2A
 	slli t1, s1, 2
@@ -143,8 +143,8 @@ SORT_D:	addi sp, sp, -24	# reserva espaço para 5 palavras na pilha
 	sw s2, 8(sp)
 	sw s1, 4(sp)
 	sw s0, 0(sp)
-	li s0, 0		# indice
-FOR1D:	bgt s0, s3, FIM_SORT1D#e
+	li s0, 0#1		# indice
+FOR1D:	bge s0, s3, FIM_SORT1D#t
 	addi s1, s0, -1
 FOR2D:	blt s1, zero, FIM_SORT2D
 	slli t1, s1, 2
@@ -242,10 +242,10 @@ LM_L1:	bgt t6, s9, LM_F#e
 	bnez a0, LM_L1
 	addi s3, t6, -2		# indice ultimo elemento acima da linha
 LM_F:	jal SORT_A
-	addi s3, s3, 1#
+	addi s3, s3, 1
 	slli s3, s3, 2
 	add s2, s2, s3
-	addi t6, t6, -2
+	addi t6, t6, -1#
 	sub s3, s9, t6
 	jal SORT_D
 	lw ra, 12(sp)
