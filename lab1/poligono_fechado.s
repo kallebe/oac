@@ -331,41 +331,6 @@ FECHA:	mv a0, a2		# coordenada origem x
 	lw ra, 0(sp)
 	addi sp, sp, 4
 	ret			# sai do procedimento DESENHA_POLIGONO
-	
-IMPRIME_VETOR:
-	addi sp, sp, -20
-	sw ra, 0(sp)
-	sw a0, 4(sp)
-	sw t0, 8(sp)
-	sw t1, 12(sp)
-	sw t2, 16(sp)
-	lw t1, 0(s11)		# numero de coordenadas
-	mv a0, t1
-	li a7, 1		# imprime numero de coordenadas
-	ecall
-	la a0, SPACE
-	li a7, 4		# imprime espaço
-	ecall
-	li t0, 1
-IV_L:	bgt t0, t1, FIM_IMPRIME
-	slli t2, t0, 2
-	add t2, s11, t2
-	lw a0, 0(t2)
-	li a7, 1		# imprime V[i]
-	ecall
-	addi t0, t0, 1
-	la a0, SPACE
-	li a7, 4		# imprime espaço
-	ecall
-	j IV_L
-FIM_IMPRIME:
-	lw ra, 0(sp)
-	lw a0, 4(sp)
-	lw t0, 8(sp)
-	lw t1, 12(sp)
-	lw t2, 16(sp)
-	addi sp, sp, 20
-	ret
 
 DESEMPILHA_V:
 	lw t0, 0(s11)
