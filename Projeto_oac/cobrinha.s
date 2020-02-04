@@ -1,31 +1,13 @@
-.data
-	# cor_vermelha   0x07070707
-	# cor_verde      0x62626262
-	
-	orig_top_esq: .word 0xFF000140 #representa o topo a esquerda
-	orig_top_dir: .word 0XFF00063C#representa o topo a direita
-	orig_bot_esq: .word 0xFF0125C0 #representa o topo a esquerda
-	orig_bot_dir: .word 0xFF012BFC #representa o topo a direita
-	
-	teto_cobra_esq: .word 	0xFF00B99C
-	teto_cobra_dir: .word 	0xFF010AE4	
-	chao_cobra_esq: .word 	0xFF0114DC	
-	chao_cobra_dir: .word 	0xFF0114E4
-	
-	comida_centro1: .word 	0xFF00B99C
-	comida_centro2: .word 	0xff010ae0
-	comida_centro3: .word 	0xff010c20
-	comida_centro4: .word 	0xff010c1c
-	teste: .word 0xFF012ABC
-	
 .text
 MAIN:
 	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL	
 	li s0, 1		# contador do tamanho da cobra
+	li s2, 119		# s2 Igual a tecla pressionada -- Começando como w
 	li s4, 0		# pontos
+	mv s5, ra		#s5 salva ra
 	
-	addi sp, sp, 2040  #alocar espaço na pilha
-	addi sp, sp, -2040  #desalocar espaço na pilha
+	add sp, sp, s0  #alocar espaço na pilha
+	la sp, teto_cobra_esq
 	li t5, 0x62626262	#definir cor da borda --- t5 representa o pixel de cor nesse jogo
 	
 	jal ra, PREENCHER_BORDAS
@@ -34,8 +16,9 @@ MAIN:
 	ret  #retorno principal
 	
 LOOP_JOGO:
+	jal MAIN_GOMOS
 	jal VERIFICAR_TECLA
-	j LOOP_JOGO			# volta ao loop
+	j LOOP_JOGO			# volta ao loop	
 	
 PREENCHER_BORDAS:
 	mv s5, ra #salvar ra em s0
@@ -90,39 +73,13 @@ PREENCHER_BORDAS_RIGHT:
 	addi t0, t0, 320
 	j PREENCHER_BORDAS_RIGHT
 	
-PREENCHER_COORDENADAS:
-	
-	
-GERAR_COMIDA:	
-	la t0, comida_centro1
-	lw t0, 0(t0)
-	sw t5, 0(t0)
-	la t0, comida_centro2
-	lw t0, 0(t0)
-	sw t5, 0(t0)
-	la t0, comida_centro3
-	lw t0, 0(t0)
-	sw t5, 0(t0)
-	la t0, comida_centro4
-	lw t0, 0(t0)
-	sw t5, 0(t0)
-	mv ra, s5
-	ret
-	
-VERIFICAR_LIMITES:
-	lw t0, 0(s0)
-	li t1, 0  #marca t1 como verdadeiro
-	beq t0, t5, FIM #compara a cor armazenada em t0 com a cor armazenada em t5
-	li t1, 1  #marca t1 como falso
-	ret
-	
 ### Verifica se há tecla pressionada	
 VERIFICAR_TECLA:	
 	li t1,0xFF200000		# carrega o endere?o de controle do KDMMIO
 	lw t0,0(t1)			# Le bit de Controle Teclado
 	andi t0,t0,0x0001		# mascara o bit menos significativo
    	beq t0,zero,FIM   	   	# Se n?o h? tecla pressionada ent?o vai para FIM
-  	lw t2,4(t1)  			# le o valor da tecla tecla
+  	lw s2,4(t1)  			# le o valor da tecla tecla
   	j DEFINE_DIRECAO
   	
 FIM:
@@ -130,3 +87,7 @@ FIM:
 	
 .include"SYSTEMv17b.s"
 .include "include/direcao.s"
+.include "include/pintar_gomo.s"
+.include "include/verificar_limites.s"
+
+.include "data/coord_principais.s"
