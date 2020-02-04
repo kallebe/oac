@@ -3,6 +3,7 @@ MAIN:
 	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL	
 	li s0, 1		# contador do tamanho da cobra
 	li s2, 119		# s2 Igual a tecla pressionada -- Começando como w
+	li s3, 0		# Representa se a comida esta ativa --- 0 = sem comida --- 1 = com comida
 	li s4, 0		# pontos
 	mv s5, ra		#s5 salva ra
 	
@@ -11,11 +12,11 @@ MAIN:
 	li t5, 0x62626262	#definir cor da borda --- t5 representa o pixel de cor nesse jogo
 	
 	jal ra, PREENCHER_BORDAS
-	#jal ra, GERAR_COMIDA
 	jal ra, LOOP_JOGO
 	ret  #retorno principal
 	
 LOOP_JOGO:
+	jal GERAR_COMIDA
 	jal MAIN_GOMOS
 	jal VERIFICAR_TECLA
 	j LOOP_JOGO			# volta ao loop	
@@ -88,6 +89,7 @@ FIM:
 .include"SYSTEMv17b.s"
 .include "include/direcao.s"
 .include "include/pintar_gomo.s"
+.include "include/gerar_comida.s"
 .include "include/verificar_limites.s"
 
 .include "data/coord_principais.s"
