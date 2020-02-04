@@ -1,52 +1,64 @@
 .eqv A 0xFF
 
 .data
-#V:	.word N, 0x00E6001C, 0x00A40052, 0x00A00042, 0x007B006D, 0x00760061, 0x004C007F, 0x003200D3, 0x005C00CB, 0x0080008C, 0x008600A4, 0x00A80068, 0x00AD007D
-SPACE:	.string " "
+V: .word 12, 0x00E6001C, 0x00A40052, 0x00A00042, 0x007B006D, 0x00760061, 0x004C007F, 0x003200D3, 0x005C00CB, 0x0080008C, 0x008600A4, 0x00A80068, 0x00AD007D
+#SPACE:	.string " "
 
 .text
-	la tp,exceptionHandling	# carrega em tp o endereço base das rotinas do sistema ECALL
- 	csrw tp, utvec 		# seta utvec para o endereço tp
- 	csrsi ustatus, 1 	# seta o bit de habilitação de interrupção em ustatus (reg 0)
+	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL
+ 	csrw tp, utvec 		# seta utvec para o endere?o tp
+ 	csrsi ustatus, 1 	# seta o bit de habilita??o de interrup??o em ustatus (reg 0)
 	
 	li s0, 3		# simula o numero de items na lista
-	li s3, 20		# numero máximo
+	li s3, 20		# numero m?ximo
 MAIN_LOOP:
 	bgt s0, s3, FIM
-	li t1, 0 		# s1 serve como o contador e é iniciado em 0
+	li t1, 0 		# s1 serve como o contador e ? iniciado em 0
 	addi t0, s0, 1
 	slli t0, t0, 2		# multiplica o numero de items por 4
 	sub sp, sp, t0		# aloca memoria para pilha
 	mv s11, sp
-	addi s1, s11, 4		# avança para o proximo endereço de s1
+	addi s1, s11, 4		# avan?a para o proximo endere?o de s1
 	jal SORTEIA
 	sw s0, 0(s11)
-	#jal IMPRIME_VETOR
-	#jal DESENHA_POLIGONO	# poligono não ordenado
+	#jal DESENHA_POLIGONO	# poligono n?o ordenado
 	jal ORDENA
-	#jal IMPRIME_VETOR
 	li a0, 0xFF
 	li a1, 0
 	li a7, 148		# limpa a tela com branco
 	ecall
- 	jal DESENHA_POLIGONO	# poligono ordenado
- 	addi s0, s0, 1
- 	jal DESEMPILHA_V
- 	j MAIN_LOOP
+	jal DESENHA_POLIGONO	# poligono ordenado
+	addi s0, s0, 1
+	jal DESEMPILHA_V
+	j MAIN_LOOP
+
+#-------------------------------------------------- A partir de V ------------------------------------------------------#
+#	la s11, V
+#	lw s0, 0(s11)		# simula o numero de items na lista
+#	li t1, 0 		# s1 serve como o contador e ? iniciado em 0
+#	addi t0, s0, 1
+#	slli t0, t0, 2		# multiplica o numero de items por 4
+#	jal ORDENA
+#	li a0, 0xFF
+#	li a1, 0
+#	li a7, 148		# limpa a tela com branco
+#	ecall
+ #	jal DESENHA_POLIGONO	# poligono ordenado
+ #	j FIM
 
 SORTEIA:
 	bge t1, s0, EXIT_SORTEIA
 	# Mapear coordenadas X
-	li a7, 41		# Gera um valor aleatorio que será usado para  a coordenada X e armazena em a0
+	li a7, 141		# Gera um valor aleatorio que ser? usado para  a coordenada X e armazena em a0
 	ecall
 	li t2, 320 		# Valor maximo para coordenadas X
-	remu t2, a0, t2 	# recupera o resto da divisão para certificar que o valor aleatorio gerado está no intervalo valido para as coordenadas X
+	remu t2, a0, t2 	# recupera o resto da divis?o para certificar que o valor aleatorio gerado est? no intervalo valido para as coordenadas X
 	slli t2, t2, 16		# Desloca a palavra 16 bits a esquerda
 	# Mapear coordenadas Y
-	li a7, 41		# Gera um valor aleatorio que será usado para  a coordenada Y e armazena em a0
+	li a7, 141		# Gera um valor aleatorio que ser? usado para  a coordenada Y e armazena em a0
 	ecall
 	li t3, 240		# Valor maximo para coordenadas Y
-	remu t3, a0, t3		# recupera o resto da divisão para certificar que o valor aleatorio gerado está no intervalo valido para as coordenadas Y
+	remu t3, a0, t3		# recupera o resto da divis?o para certificar que o valor aleatorio gerado est? no intervalo valido para as coordenadas Y
 	slli t3, t3, 16 	# Desloca a palavra 16 bits a esquerda
 	srli t3, t3, 16 	# Desloca a palavra 16 bits a direita para zerar os valores a esquerda no momento de fazer o OR
 	or t4, t2 t3		# junta as coordenadas na palavra
@@ -56,16 +68,15 @@ SORTEIA:
 	j SORTEIA
 EXIT_SORTEIA: ret	
 
-ORDENA:	mv t0, s11		# endereço do vetor de coordenadas
+ORDENA:	mv t0, s11		# endere?o do vetor de coordenadas
 	li t2, 1		# indice
 	lw s8, 0(t0)
 EXTREMOS:
 	slli t4, t2, 2
 	add t4, t0, t4
-	lw t3, 0(t4)		# le par de coordenadas
-	mv s4, t3		# inicia a primeira coordenada como a mais esquerda - GLOBAL
-	addi s5, s4, 0		# inicia a primeira coordenada como a mais direita  - GLOBAL
-	addi t2, t2, 1
+	li s4, 0x01410141	# inicia a coordenada mais esquerda - GLOBAL
+	li s5, 0			# inicia a coordenada mais direita  - GLOBAL
+	#addi t2, t2, 1
 EXTREMOS_LOOP:
 	bgt t2, s8, SEPARA_AREAS
 	slli t4, t2, 2
@@ -99,7 +110,7 @@ SWAP:	slli t1, a1, 2
 	sw t0,4(t1)
 	ret
 	
-SORT_A:	addi sp, sp, -24	# reserva espaço para 6 palavras na pilha
+SORT_A:	addi sp, sp, -24	# reserva espa?o para 6 palavras na pilha
 	sw s8, 20(sp)
 	sw ra, 16(sp)
 	sw s3, 12(sp)
@@ -111,7 +122,7 @@ FOR1A:	bgt s0, s3, FIM_SORT1A
 	addi s1, s0, -1
 FOR2A:	blt s1, zero, FIM_SORT2A
 	slli t1, s1, 2
-	add t2, s2, t1		# indexação
+	add t2, s2, t1		# indexa??o
 	lw t3, 0(t2)		# V[i]
 	srli t3, t3, 16		# le a coordenada x[i]
 	lw t4, 4(t2)		# V[i+1]
@@ -136,7 +147,7 @@ FIM_SORT1A:
 	addi sp, sp, 24		# desempilha items
 	ret
 
-SORT_D:	addi sp, sp, -24	# reserva espaço para 5 palavras na pilha
+SORT_D:	addi sp, sp, -24	# reserva espa?o para 5 palavras na pilha
 	sw s8, 20(sp)
 	sw ra, 16(sp)
 	sw s3, 12(sp)
@@ -148,7 +159,7 @@ FOR1D:	bge s0, s3, FIM_SORT1D#t
 	addi s1, s0, -1
 FOR2D:	blt s1, zero, FIM_SORT2D
 	slli t1, s1, 2
-	add t2, s2, t1		# indexação
+	add t2, s2, t1		# indexa??o
 	lw t3, 0(t2)		# V[i]
 	srli t3, t3, 16		# le a coordenada x[i]
 	lw t4, 4(t2)		# V[i+1]
@@ -180,15 +191,15 @@ SEPARA_AREAS:			# separa vetor de coordenadas: primeiro pontos acima da linha
 	sw t0, 12(sp)
 	sw s2, 16(sp)
 	sw t1, 20(sp)
-	mv s0, s11		# endereco de V
+	mv s0, s11			# endereco de V
 	lw s1, 0(s0)		# numero de itens
 	addi s0, s0, 4
 	li t0, 1#0		# indice
 SA_L1:	bge t0, s1, SA_L2
 	add s2, s0, zero
 	lw t1, 0(s0)
-	#beq t1, s4, SA_PP	# se o ponto for o extremo à esquerda
-	#beq t1, s5, SA_PP	# se o ponto for o extremo à direita
+	#beq t1, s4, SA_PP	# se o ponto for o extremo ? esquerda
+	#beq t1, s5, SA_PP	# se o ponto for o extremo ? direita
 	mv a0, s4
 	mv a1, s5
 	mv a2, t1
@@ -255,7 +266,7 @@ LM_F:	jal SORT_A
 	addi sp, sp, 16
 	ret
 	
-ACIMA_DA_LINHA:			# verifica se ponto C está acima da linha AB
+ACIMA_DA_LINHA:			# verifica se ponto C est? acima da linha AB
 	addi sp, sp, -24
 	sw t0, 20(sp)
 	sw t1, 16(sp)
@@ -291,10 +302,10 @@ ACIMA_DA_LINHA:			# verifica se ponto C está acima da linha AB
 SORTEIA_COR:
 	addi sp, sp, -4
 	sw t2, 0(sp)
-	li a7, 41		# Gera um valor aleatorio que será usado para a cor da linha
+	li a7, 141		# Gera um valor aleatorio que ser? usado para a cor da linha
 	ecall
 	li t2, 0xfe 		# Valor maximo para a cor
-	remu a0, a0, t2 	# recupera o resto da divisão para certificar que o valor aleatorio gerado está no intervalo valido
+	remu a0, a0, t2 	# recupera o resto da divis?o para certificar que o valor aleatorio gerado est? no intervalo valido
 	lw t2, 0(sp)
 	addi sp, sp, 4
 	ret
@@ -302,7 +313,7 @@ SORTEIA_COR:
 DESENHA_POLIGONO:
 	addi sp, sp, -4
 	sw ra, 0(sp)
-	mv t0, s11		# endereço do vetor de coordenadas
+	mv t0, s11		# endere?o do vetor de coordenadas
 	lw t1, 0(t0)		# quantidade de arestas
 	li t2, 1		# indice vetor
 	jal SORTEIA_COR		# sorteia cor da linha
