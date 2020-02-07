@@ -8,43 +8,54 @@ V: .word 12, 0x00E6001C, 0x00A40052, 0x00A00042, 0x007B006D, 0x00760061, 0x004C0
 	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL
  	csrw tp, utvec 		# seta utvec para o endere?o tp
  	csrsi ustatus, 1 	# seta o bit de habilita??o de interrup??o em ustatus (reg 0)
-	
-	li s0, 3		# simula o numero de items na lista
-	li s3, 20		# numero m?ximo
-MAIN_LOOP:
-	bgt s0, s3, FIM
-	li t1, 0 		# s1 serve como o contador e ? iniciado em 0
-	addi t0, s0, 1
-	slli t0, t0, 2		# multiplica o numero de items por 4
-	sub sp, sp, t0		# aloca memoria para pilha
-	mv s11, sp
-	addi s1, s11, 4		# avan?a para o proximo endere?o de s1
-	jal SORTEIA
-	sw s0, 0(s11)
-	#jal DESENHA_POLIGONO	# poligono n?o ordenado
-	jal ORDENA
-	li a0, 0xFF
-	li a1, 0
-	li a7, 148		# limpa a tela com branco
-	ecall
-	jal DESENHA_POLIGONO	# poligono ordenado
-	addi s0, s0, 1
-	jal DESEMPILHA_V
-	j MAIN_LOOP
 
-#-------------------------------------------------- A partir de V ------------------------------------------------------#
-#	la s11, V
-#	lw s0, 0(s11)		# simula o numero de items na lista
+#-------------------------------------------------- Poligono Aleatorio ------------------------------------------------------#
+#	li s0, 3		# simula o numero de items na lista
+#	li s3, 20		# numero m?ximo
+#MAIN_LOOP:
+#	bgt s0, s3, FIM
 #	li t1, 0 		# s1 serve como o contador e ? iniciado em 0
 #	addi t0, s0, 1
 #	slli t0, t0, 2		# multiplica o numero de items por 4
+#	sub sp, sp, t0		# aloca memoria para pilha
+#	mv s11, sp
+#	addi s1, s11, 4		# avan?a para o proximo endere?o de s1
+#	jal SORTEIA
+#	sw s0, 0(s11)
+	#jal DESENHA_POLIGONO	# poligono n?o ordenado
 #	jal ORDENA
 #	li a0, 0xFF
 #	li a1, 0
 #	li a7, 148		# limpa a tela com branco
 #	ecall
- #	jal DESENHA_POLIGONO	# poligono ordenado
- #	j FIM
+#	jal DESENHA_POLIGONO	# poligono ordenado
+#	addi s0, s0, 1
+#	jal DESEMPILHA_V
+#	j MAIN_LOOP
+
+#-------------------------------------------------- A partir de V ------------------------------------------------------#
+	li s9, 10		# numero de iterações
+	li s7, 0		# indice
+LOOP_V:	bge s7, s9, FIM_V
+	li s8, 0xff200700	# endereço tempo exec
+	la s11, V
+	lw s0, 0(s11)		# simula o numero de items na lista
+	lw s10, 0(s8)
+	jal ORDENA
+	lw t0, 0(s8)
+	sub s10, t0, s10	# t exec ORDENA
+	li a0, 0xFF
+	li a1, 0
+	li a7, 148		# limpa a tela com branco
+	ecall
+	lw t0, 0(s8)
+	jal DESENHA_POLIGONO	# poligono ordenado
+	lw t1, 0(s8)
+	sub t1, t1, t0		# t exec POLIGONO
+	add s10, s10, t1	# t exec ORDENA + POLIGONO
+	addi s7, s7, 1		# incrementa indice loop
+	j LOOP_V
+FIM_V:	j FIM
 
 SORTEIA:
 	bge t1, s0, EXIT_SORTEIA
@@ -68,7 +79,9 @@ SORTEIA:
 	j SORTEIA
 EXIT_SORTEIA: ret	
 
-ORDENA:	mv t0, s11		# endere?o do vetor de coordenadas
+ORDENA:	addi sp, sp, -4
+	sw s8, 0(sp)
+	mv t0, s11		# endere?o do vetor de coordenadas
 	li t2, 1		# indice
 	lw s8, 0(t0)
 EXTREMOS:
@@ -78,7 +91,7 @@ EXTREMOS:
 	li s5, 0			# inicia a coordenada mais direita  - GLOBAL
 	#addi t2, t2, 1
 EXTREMOS_LOOP:
-	bgt t2, s8, SEPARA_AREAS
+	bgt t2, s8, FIM_EXTREMOS
 	slli t4, t2, 2
 	addi t2, t2, 1
 	add t4, t0, t4
@@ -101,6 +114,10 @@ EXTREMO_ESQUERDA:
 	sw t3, 4(s11)
 	sw a0, 0(t4)
 	j EXTREMOS_LOOP
+FIM_EXTREMOS:
+	lw s8, 0(sp)
+	addi sp, sp, 4
+	j SEPARA_AREAS
 
 SWAP:	slli t1, a1, 2
 	add t1, a0, t1
@@ -311,13 +328,17 @@ SORTEIA_COR:
 	ret
  	 	
 DESENHA_POLIGONO:
-	addi sp, sp, -4
+	addi sp, sp, -8
 	sw ra, 0(sp)
+	sw t0, 4(sp)
 	mv t0, s11		# endere?o do vetor de coordenadas
 	lw t1, 0(t0)		# quantidade de arestas
 	li t2, 1		# indice vetor
-	jal SORTEIA_COR		# sorteia cor da linha
-	mv a4, a0
+#-------------------------------------------------- Poligono Aleatorio ------------------------------------------------------#
+#	jal SORTEIA_COR		# sorteia cor da linha
+#	mv a4, a0
+#----------------------------------------------------- A Partir de V --------------------------------------------------------#
+	li a4, 0x07
 DESENHA_LINHA:
 	bge t2, t1, FECHA	# verifica se todo o vetor foi percorrido
 	slli t4, t2, 2		# incrementa indice
@@ -340,7 +361,8 @@ FECHA:	mv a0, a2		# coordenada origem x
 	lhu a3, 4(t0)		# coordenada destino y
 	ecall
 	lw ra, 0(sp)
-	addi sp, sp, 4
+	lw t0, 4(sp)
+	addi sp, sp, 8
 	ret			# sai do procedimento DESENHA_POLIGONO
 
 DESEMPILHA_V:
