@@ -3,7 +3,6 @@ GERAR_COMIDA:
 	bne s3, zero, FIM_COMIDA
 	la t0, orig_top_esq
 	lw t1, 0(t0) #endereço inicial
-	li s3, 1
 	
 SORTEAR_COORDENADA:
 	#Mapear coordenadas X
@@ -24,43 +23,82 @@ SORTEAR_COORDENADA:
 	bleu t4, t2, SORTEAR_COORDENADA
 	la t3, orig_bot_esq
 	lw t2, 0(t3)
-	bgeu t4, t2, SORTEAR_COORDENADA
+	bgeu t4, t2, SORTEAR_COORDENADA 
 	li t3, 4
 	remu t3, t4, t3
-	bne t3, zero, SORTEAR_COORDENADA
+	bne t3, zero, SORTEAR_COORDENADA #verifica se o endereço gerado é divisivel por 4
+	lw t2, 0(t4)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+#	addi t1, t4, 4 #pintar uma coluna pra direita
+#	lw t2, 0(t1)
+#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+#	addi t1, t4, -960 #pintar uma coluna pra direita
+#	lw t2, 0(t1)
+#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+#	addi t1, t4, -964 #pintar uma coluna pra direita
+#	lw t2, 0(t1)
+#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+#	addi t1, t4, -640 #pintar uma coluna pra direita
+#	lw t2, 0(t1)
+#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+#	addi t1, t4, -636 #pintar uma coluna pra direita
+#	lw t2, 0(t1)
+#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, -320 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+#	addi t1, t4, -316 #pintar uma coluna pra direita
+#	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, 320 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	#addi t1, t4, 324 #pintar uma coluna pra direita
+	#lw t2, 0(t1)
+	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	#addi t1, t4, 640 #pintar uma coluna pra direita
+	#lw t2, 0(t1)
+	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	#addi t1, t4, 644 #pintar uma coluna pra direita
+	#lw t2, 0(t1)
+	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	#addi t1, t4, 960 #pintar uma coluna pra direita
+	#lw t2, 0(t1)
+	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	#addi t1, t4, 964 #pintar uma coluna pra direita
+	#lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
 	############################################
 	sw t4, 0(t0)
 	
 PINTAR_COMIDA:
 	li t4, 0xffffffff
 	lw t2, 0(t0)
+	mv s1, t2 #salva a coordenada principal da comida no registrador
 	sw t4, 0(t2)
-	addi t1, t2, 4 #pintar uma coluna pra direita
-	sw t4, 0(t1)
-	addi t1, t2, -960 #pintar gomo 2 linhas acima
-	sw t4, 0(t1)
-	addi t1, t2, -956 #pintar gomo 2 linhas acima e uma coluna pra direita
-	sw t4, 0(t1)
-	addi t1, t2, -640 #pintar gomo 2 linhas acima
-	sw t4, 0(t1)
-	addi t1, t2, -636 #pintar gomo 2 linhas acima e uma coluna pra direita
-	sw t4, 0(t1)
+	#addi t1, t2, 4 #pintar uma coluna pra direita
+	#sw t4, 0(t1)
+	#addi t1, t2, -960 #pintar gomo 2 linhas acima
+	#sw t4, 0(t1)
+	#addi t1, t2, -956 #pintar gomo 2 linhas acima e uma coluna pra direita
+	#sw t4, 0(t1)
+	#addi t1, t2, -640 #pintar gomo 2 linhas acima
+	#sw t4, 0(t1)
+	#addi t1, t2, -636 #pintar gomo 2 linhas acima e uma coluna pra direita
+	#sw t4, 0(t1)
 	addi t1, t2, -320 #pintar gomo 1 linha acima
 	sw t4, 0(t1)
-	addi t1, t2, -316 #pintar gomo 1 linha acima e uma coluna pra direit
-	sw t4, 0(t1)
+	#addi t1, t2, -316 #pintar gomo 1 linha acima e uma coluna pra direit
+	#sw t4, 0(t1)
 	addi t1, t2, 320 #pintar gomo 1 linha abaixo
 	sw t4, 0(t1)
-	addi t1, t2, 324 #pintar gomo 1 linha abaixo e uma coluna pra direita
-	sw t4, 0(t1)
-	addi t1, t2, 640 #pintar gomo 2 linhas abaixo
-	sw t4, 0(t1)
-	addi t1, t2, 644 #pintar gomo 2 linhas abaixo e uma coluna pra direita
-	sw t4, 0(t1)
-	addi t1, t2, 960 #pintar gomo 3 linhas abaixo
-	sw t4, 0(t1)
-	addi t1, t2, 964 #pintar gomo 3 linhas abaixo e uma coluna pra direita
-	sw t4, 0(t1)
+	#addi t1, t2, 324 #pintar gomo 1 linha abaixo e uma coluna pra direita
+	#sw t4, 0(t1)
+	#addi t1, t2, 640 #pintar gomo 2 linhas abaixo
+	#sw t4, 0(t1)
+	#addi t1, t2, 644 #pintar gomo 2 linhas abaixo e uma coluna pra direita
+	#sw t4, 0(t1)
+	li s3, 1 #seta a comida como ativa
 	
 FIM_COMIDA:
 	ret
