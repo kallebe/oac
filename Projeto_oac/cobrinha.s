@@ -10,6 +10,7 @@ NOTAS: 55,300,56,300,54,300,56,300,59,300,59,300,66,300,74,300,66,300,59,600,55,
 MENU:	li t1,0xFF000000	# endereco inicial da Memoria VGA - Frame 0
 	li t2,0xFF012C00	# endereco final 
 	la s1,MENU5		# endereço dos dados da tela na memoria
+	li s6, 10000		# modo easy como default
 	addi s1,s1,8		# primeiro pixels depois das informações de nlin ncol
 LOOP1: 	beq t1,t2,TOCAR_NOTAS		# Se for o último endereço então sai do loop
 	lw t3,0(s1)		# le um conjunto de 4 pixels : word
@@ -49,17 +50,38 @@ FIM_NOTAS:
 	li a7,33		# define o syscall
 	ecall			# toca a nota			
 #############################################################################################
- PEGA_SELECAO_MENU:
+PEGA_SELECAO_MENU:
 	li t1,0xFF200000		# carrega o endere�o de controle do KDMMIO
 	lw t0,0(t1)			# Le bit de Controle Teclado
 	andi t0,t0,0x0001		# mascara o bit menos significativo
    	beq t0,zero,FIM_SELECAO_MENU   	   	# Se n�o h� tecla pressionada ent�o vai para FIM
   	lw t2,4(t1)  			# le o valor da tecla tecla
 	
-	li t0,52
+	li t0,52 		#4 em ASCI
 	beq  t2,t0,PREENCHE_PRETO
+	li t0,49 		#1 em ASCI
+	beq  t2,t0, EASY
+	li t0,50		#2 em ASCI
+	beq  t2,t0, MEDIUM
+	li t0,51 		#3 em ASCI
+	beq  t2,t0, HARD
+	
 FIM_SELECAO_MENU:
+	j PEGA_SELECAO_MENU
+	
+############################################ DEFINIR NIVEL $#########################################
+EASY:
+	li s6, 10000
 	j PEGA_SELECAO_MENU 
+
+MEDIUM:
+	li s6, 5000
+	j PEGA_SELECAO_MENU 
+
+HARD:
+	li s6, 1000	
+	j PEGA_SELECAO_MENU 	
+
 ############################################################################################################
 # Preenche a tela de preto
 PREENCHE_PRETO:
@@ -79,7 +101,7 @@ MAIN:
 	li s2, 0		# s2 Igual a tecla pressionada -- Come�ando como w
 	li s3, 0		# Representa se a comida esta ativa --- 0 = sem comida --- 1 = com comida
 	li s4, 0		# s4 representa os pontos no jogo
-	li s6, 10000		#define dificuldade
+	#li s6, 10000		s6 define dificuldade
 	li s7, 1		#marcador de reinicializa��o do jogo 1 = nao reinicia -- 0 reinicia
 	mv s5, ra		#s5 salva ra
 	

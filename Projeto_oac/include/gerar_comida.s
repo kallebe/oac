@@ -29,44 +29,44 @@ SORTEAR_COORDENADA:
 	bne t3, zero, SORTEAR_COORDENADA #verifica se o endereço gerado é divisivel por 4
 	lw t2, 0(t4)
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-#	addi t1, t4, 4 #pintar uma coluna pra direita
-#	lw t2, 0(t1)
-#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-#	addi t1, t4, -960 #pintar uma coluna pra direita
-#	lw t2, 0(t1)
-#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-#	addi t1, t4, -964 #pintar uma coluna pra direita
-#	lw t2, 0(t1)
-#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-#	addi t1, t4, -640 #pintar uma coluna pra direita
-#	lw t2, 0(t1)
-#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-#	addi t1, t4, -636 #pintar uma coluna pra direita
-#	lw t2, 0(t1)
-#	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, 4 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, -960 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, -964 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, -640 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, -636 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
 	addi t1, t4, -320 #pintar uma coluna pra direita
 	lw t2, 0(t1)
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-#	addi t1, t4, -316 #pintar uma coluna pra direita
-#	lw t2, 0(t1)
+	addi t1, t4, -316 #pintar uma coluna pra direita
+	lw t2, 0(t1)
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
 	addi t1, t4, 320 #pintar uma coluna pra direita
 	lw t2, 0(t1)
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-	#addi t1, t4, 324 #pintar uma coluna pra direita
-	#lw t2, 0(t1)
-	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-	#addi t1, t4, 640 #pintar uma coluna pra direita
-	#lw t2, 0(t1)
-	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-	#addi t1, t4, 644 #pintar uma coluna pra direita
-	#lw t2, 0(t1)
-	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-	#addi t1, t4, 960 #pintar uma coluna pra direita
-	#lw t2, 0(t1)
-	#beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
-	#addi t1, t4, 964 #pintar uma coluna pra direita
-	#lw t2, 0(t1)
+	addi t1, t4, 324 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, 640 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, 644 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, 960 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, 964 #pintar uma coluna pra direita
+	lw t2, 0(t1)
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
 	############################################
 	sw t4, 0(t0)
