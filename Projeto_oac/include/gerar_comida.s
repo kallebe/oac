@@ -20,9 +20,11 @@ SORTEAR_COORDENADA:
 	################## VERIFICAR SE O NUMERO GERADO É VALIDO
 	la t3, orig_top_dir
 	lw t2, 0(t3)
+	addi t2, t2, 320
 	bleu t4, t2, SORTEAR_COORDENADA
 	la t3, orig_bot_esq
 	lw t2, 0(t3)
+	addi t2, t2, -320
 	bgeu t4, t2, SORTEAR_COORDENADA 
 	li t3, 4
 	remu t3, t4, t3
@@ -67,14 +69,21 @@ SORTEAR_COORDENADA:
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
 	addi t1, t4, 964 #pintar uma coluna pra direita
 	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da 
+	addi t1, t4, 1280 #pintar uma coluna pra direita
+	lw t2, 0(t1)
+	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
+	addi t1, t4, -1280 #pintar uma coluna pra direita
+	lw t2, 0(t1)
 	beq t5, t2, SORTEAR_COORDENADA #verifica se o ponto é uma borda ou parte do corpo da cobra
 	############################################
 	sw t4, 0(t0)
+	mv t2, t4
+	mv s1, t2 #salva a coordenada principal da comida no registrador
+	j PINTAR_COMIDA
 	
 PINTAR_COMIDA:
 	li t4, 0xffffffff
-	lw t2, 0(t0)
-	mv s1, t2 #salva a coordenada principal da comida no registrador
 	sw t4, 0(t2)
 	#addi t1, t2, 4 #pintar uma coluna pra direita
 	#sw t4, 0(t1)

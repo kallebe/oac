@@ -9,6 +9,7 @@
 	#orig_bot_esq: .word 0xFF0125C0 #representa o topo a esquerda
 	#orig_bot_dir: .word 0xFF012BFC #representa o topo a direita
 	
+	teto_cobra_esq2: .word 0xFF00B5DC
 	teto_cobra_esq: .word 	0xFF00B99C
 	teto_cobra_dir: .word 	0xFF010AE4	
 	chao_cobra_esq: .word 	0xFF010F64	
@@ -20,4 +21,7 @@
 	comida_centro2: .word 	0xff010ae0
 	texto_pontos: .word 	0xff010c20
 	texto_vidas: .word 	0xff010c1c
-	teste: .word 0xFF012ABC
+	
+	
+	teste2: .word 0xFF00B21C
+	teste3: .word 0xFF00AE5C

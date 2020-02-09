@@ -96,7 +96,7 @@ LOOP: 	beq t1,t2,MAIN		# Se for o �ltimo endere�o ent�o sai do loop
 ##############################################################################################################
 MAIN:
 	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL	
-	li s0, 1		# contador do tamanho da cobra
+	li s0, 2		# contador do tamanho da cobra
 	li s1, 0		# s1 representa a coordenada da comida
 	li s2, 0		# s2 Igual a tecla pressionada -- Come�ando como w
 	li s3, 0		# Representa se a comida esta ativa --- 0 = sem comida --- 1 = com comida
@@ -110,10 +110,15 @@ MAIN:
 	li t0, -1
 	mul t0, t1, t0
 	add sp, sp, t0  #alocar espa�o na pilha
-	## DESLOCAR s0 pra alocar espa�o na pilha
-	la t0, teto_cobra_esq
+	## DESLOCAR s0 pra alocar espa�o na pilha	
+	la t0, teto_cobra_esq2
 	lw t0, 0(t0)
 	sw t0, 0(sp)
+
+	la t0, teto_cobra_esq
+	lw t0, 0(t0)
+	sw t0, 4(sp)
+	
 	li t5, 0x62626262	#definir cor da borda e da cobra --- t5 representa o pixel de cor nesse jogo
 	li a5, 0xffffffff 	#cor da comida
 	li a4, 0x00000000 	#cor de fundo
