@@ -94,8 +94,11 @@ LOOP: 	beq t1,t2,MAIN		# Se for o �ltimo endere�o ent�o sai do loop
 	j LOOP			# volta a verificar
 ##############################################################################################################
 ##############################################################################################################
+	
 MAIN:
-	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL	
+	la tp,exceptionHandling	# carrega em tp o endere?o base das rotinas do sistema ECALL
+ 	csrw tp, utvec 		# seta utvec para o endere?o tp
+ 	csrsi ustatus, 1 	# seta o bit de habilita??o de interrup??o em ustatus (reg 0)
 	li s0, 2		# contador do tamanho da cobra
 	li s1, 0		# s1 representa a coordenada da comida
 	li s2, 0		# s2 Igual a tecla pressionada -- Come�ando como w
@@ -124,6 +127,13 @@ MAIN:
 	li a4, 0x00000000 	#cor de fundo
 	
 	jal ra, PREENCHER_BORDAS
+	##
+	addi sp, sp, -4
+	sw ra, 0(sp)
+	jal IMPRIMIR_PONTUACAO
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	##
 	jal ra, LOOP_JOGO
 	ret  #retorno principal
 		
@@ -133,7 +143,7 @@ LOOP_JOGO:
 	li t3, 1
 	jal VERIFICAR_TECLA
 	beq s7, zero, MENU
-	j LOOP_JOGO	
+	j LOOP_JOGO
 	
 PREENCHER_BORDAS:
 	mv s5, ra #salvar ra em s0
@@ -212,7 +222,7 @@ FIM:
 	ret #retornar
 	
 	
-.include"SYSTEMv17b.s"
+.include "SYSTEMv17b.s"
 
 .include "include/direcao.s"
 .include "include/pintar_gomo.s"

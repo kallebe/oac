@@ -270,7 +270,7 @@ SWAP_DIRECAO:
 	j SWAP_DIRECAO
 	
 COMER:
-	addi sp, sp, -4 #adicionar mais 4 espaços a pilha
+	addi sp, sp, -4 #adicionar mais 4 espaços a pilha mais 4 para o ra
 	mv a1, sp
 	sw a2, 0(a1)
 	addi s0, s0, 1 #incrementar a cobra
@@ -278,7 +278,34 @@ COMER:
 	li s3, 0 	#setar comida como inativa
 	mv t2, s1	#mover coordenada da comida pra t2	
 	#t2 é usado para preencher a antiga cauda de preto
-	j PINTAR_PRETO	
+	addi sp, sp, -4
+	sw ra, 0(sp)
+	jal IMPRIMIR_PONTUACAO
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	j PINTAR_PRETO
+
+IMPRIMIR_PONTUACAO:
+	addi sp, sp, -20
+	sw a0, 0(sp)
+	sw a1, 4(sp)
+	sw a2, 8(sp)
+	sw a3, 12(sp)
+	sw a4, 16(sp)
+	mv a0, s4	# pontos para imprimir
+	li a1, 160	# coluna para pontuação
+	li a2, 228	# linha para pontuação
+	li a3, 0x00FF	# cor da pontuação
+	li a4, 0	# frame
+	li a7, 136
+	ecall
+	lw a0, 0(sp)
+	lw a1, 4(sp)
+	lw a2, 8(sp)
+	lw a3, 12(sp)
+	lw a4, 16(sp)
+	addi sp, sp, 20
+	ret
 	
 PINTAR_PRETO:
 	#############################################PINTAR COMIDA################################
