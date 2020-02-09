@@ -65,45 +65,32 @@ VERIFICAR_COLISAO_ESQUERDA:
 	mv t1, t0
 	addi t1, t1, -4
 	mv a2, t1 # salvando a proxima coordenada alem do ponto
-	lw t1, 0(t1)
+	lw t1, 0(a2)
 	beq t1, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -4	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada represen
-	mv t2, t1
 	addi t2, a2, -316	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 324	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -956	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 964	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -636	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 644	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
 	j MOVER_COBRA
@@ -112,45 +99,32 @@ VERIFICAR_COLISAO_DIREITA:
 	mv t1, t0
 	addi t1, t1, 4
 	mv a2, t1 # salvando a proxima coordenada alem do ponto
-	lw t1, 0(t1)
+	lw t1, 0(a2)
 	beq t1, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -4	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada represen
-	mv t2, t1
 	addi t2, a2, -316	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 324	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -956	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 964	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -636	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 644	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
 	j MOVER_COBRA
@@ -159,45 +133,32 @@ VERIFICAR_COLISAO_CIMA:
 	mv t1, t0
 	addi t1, t1, -320
 	mv a2, t1 # salvando a proxima coordenada alem do ponto
-	lw t1, 0(t1)
+	lw t1, 0(a2)
 	beq t1, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -4	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada represen
-	mv t2, t1
 	addi t2, a2, -316	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 324	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -956	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 964	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -636	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 644	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
 	j MOVER_COBRA
@@ -206,45 +167,32 @@ VERIFICAR_COLISAO_BAIXO:
 	mv t1, t0
 	addi t1, t1, 320
 	mv a2, t1 # salvando a proxima coordenada alem do ponto
-	lw t1, 0(t1)
+	lw t1, 0(a2)
 	beq t1, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -4	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada represen
-	mv t2, t1
 	addi t2, a2, -316	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 320	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 324	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -956	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 960	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 964	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, -636	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 640	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
-	mv t2, t1
 	addi t2, a2, 644	#mover coordenada da comida pra t2	
 	beq t2, t5, REINICIAR_JOGO #verifica se a coordenada gerada representa um valor de colisao
 	j MOVER_COBRA
@@ -252,7 +200,7 @@ VERIFICAR_COLISAO_BAIXO:
 REINICIAR_JOGO:
 	slli t0, s0, 2
 	add sp, sp, t0 # desalocar espacos na pilha
-	#mv ra, zero 
+	mv ra, zero 
 	li s7, 0 #reiniciar jogo
 	ret
 	
