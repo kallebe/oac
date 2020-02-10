@@ -41,25 +41,84 @@ IS_W:
   	mv s2, t0
 	j CIMA
 	
+
 ESQUERDA:
 	lw t0, 0(a1)
 	addi t0, t0, -4
+	addi t3, t0, 960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
+	addi t3, t0, -960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
+	
 	j VERIFICAR_COLISAO_ESQUERDA
 	
 DIREITA:
 	lw t0, 0(a1)
 	addi t0, t0, 4
+	addi t3, t0, 960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
+	addi t3, t0, -960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
 	j VERIFICAR_COLISAO_DIREITA
 	
 CIMA:
 	lw t0, 0(a1)
 	addi t0, t0, -960
+	addi t3, t0, 960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
+	addi t3, t0, -960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
 	j VERIFICAR_COLISAO_CIMA
 	
 BAIXO:
 	lw t0, 0(a1)
 	addi t0, t0, 960
+	addi t3, t0, 960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
+	addi t3, t0, -960
+	la t2, orig_top_dir
+	lw t1, 0(t2)
+	bleu t3, t1, REINICIAR_JOGO
+	la t2, orig_bot_esq
+	lw t1, 0(t2)
+	bgeu t0, t1, REINICIAR_JOGO
 	j VERIFICAR_COLISAO_BAIXO
+	
 	
 VERIFICAR_COLISAO_ESQUERDA:
 	mv t1, t0
@@ -200,7 +259,7 @@ VERIFICAR_COLISAO_BAIXO:
 REINICIAR_JOGO:
 	slli t0, s0, 2
 	add sp, sp, t0 # desalocar espacos na pilha
-	mv ra, zero 
+	#mv ra, zero 
 	li s7, 0 #reiniciar jogo
 	ret
 	

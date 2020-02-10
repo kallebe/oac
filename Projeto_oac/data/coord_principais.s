@@ -23,5 +23,5 @@
 	texto_vidas: .word 	0xff010c1c
 	
 	
-	teste2: .word 0xFF00B21C
+	INICIAL: .word 0xFF000000
 	teste3: .word 0xFF00AE5C
